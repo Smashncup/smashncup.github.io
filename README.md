@@ -1,2 +1,2 @@
-# smashncup.github.io
+#Smash N'cup Menu
 Menu
