@@ -107,6 +107,16 @@
         .form-group input, .form-group select, .form-group textarea {
             background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; font-family: inherit;
         }
+
+        /* NEW: Location Button Design */
+        .location-btn {
+            background: #333; color: white; border: 1px solid var(--primary);
+            padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-top: 10px;
+        }
+        #location-status { font-size: 0.8rem; text-align: center; margin-top: 5px; display: none; }
+
         .hidden { display: none; }
 
         .checkout-final-btn {
@@ -824,7 +834,14 @@
             </div>
             <div id="delivery-fields" class="hidden">
                 <div class="form-group"><label>Full Name:</label><input type="text" id="cust-name"></div>
-                <div class="form-group"><label>Address:</label><textarea id="cust-address"></textarea></div>
+                <div class="form-group"><label>Address Details:</label><textarea id="cust-address" placeholder="Building, Floor, etc."></textarea></div>
+                <div class="form-group">
+                    <button type="button" class="location-btn" onclick="getLocation()">
+                        📍 Share My Live Location
+                    </button>
+                    <div id="location-status"></div>
+                    <input type="hidden" id="gps-coords">
+                </div>
             </div>
             <div class="form-group">
                 <label>Special Instructions (e.g. No Pickles):</label>
@@ -931,6 +948,33 @@
             document.getElementById('delivery-fields').className = (type === 'Delivery') ? '' : 'hidden';
         }
 
+        // --- GPS LOCATION LOGIC ---
+        function getLocation() {
+            const status = document.getElementById('location-status');
+            const coordsInput = document.getElementById('gps-coords');
+            if (!navigator.geolocation) {
+                alert("Location not supported by your phone.");
+                return;
+            }
+            status.style.display = "block";
+            status.innerText = "⌛ Finding your GPS...";
+            status.style.color = "var(--accent)";
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    coordsInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
+                    status.innerText = "✅ Location Captured!";
+                    status.style.color = "var(--success)";
+                },
+                () => {
+                    status.innerText = "❌ Please enable GPS permissions.";
+                    status.style.color = "var(--danger)";
+                }
+            );
+        }
+
         function requestOrder() {
             const type = document.getElementById('order-type').value;
             if (type === 'Delivery' && (!document.getElementById('cust-name').value || !document.getElementById('cust-address').value)) {
@@ -958,6 +1002,8 @@
             if (type === 'Delivery') {
                 message += `\n\n👤 *Customer:* ${document.getElementById('cust-name').value}`;
                 message += `\n🏠 *Address:* ${document.getElementById('cust-address').value}`;
+                const gps = document.getElementById('gps-coords').value;
+                if (gps) message += `\n📍 *Map Link:* ${gps}`;
             }
             window.location.href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
         }
