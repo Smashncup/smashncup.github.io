@@ -1,2 +1,839 @@
 #Smash N'cup Menu
 Menu
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smash N'Cup Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF4D00;
+            --secondary: #282828;
+            --bg: #0f0f0f;
+            --text: #ffffff;
+            --accent: #ff8c00;
+            --danger: #ff3333;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            line-height: 1.6;
+            padding-bottom: 120px;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80');
+            background-size: cover; background-position: center; height: 250px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; border-bottom: 4px solid var(--primary);
+        }
+
+        .hero h1 { font-size: 2.5rem; margin: 0; color: var(--primary); letter-spacing: 2px; }
+        .hero p { margin: 5px 0; font-weight: 600; }
+
+        .container { padding: 20px; max-width: 800px; margin: auto; }
+
+        .category-header {
+            display: flex; align-items: center; margin: 40px 0 20px; padding: 10px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            border-radius: 8px;
+        }
+        .category-header h2 { margin: 0; font-size: 1.4rem; text-transform: uppercase; }
+
+        .menu-card {
+            background: var(--secondary); border-radius: 15px; margin-bottom: 15px;
+            padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid #333;
+        }
+
+        /* --- NEW CSS FOR THE IMAGE --- */
+        .item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #444;
+        }
+        /* ---------------------------- */
+
+        .item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+        .item-title { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+        .item-arabic { display: block; direction: rtl; font-size: 0.9rem; color: #ffbc9f; margin-bottom: 5px; }
+        .item-desc { font-size: 0.8rem; color: #bbb; display: block; margin-top: 5px; }
+        
+        .action-area { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .price-box { color: var(--accent); font-weight: 700; font-size: 0.95rem; }
+
+        .price-select {
+            background: #3d3d3d; color: var(--accent); border: 1px solid var(--primary);
+            padding: 5px; border-radius: 8px; font-size: 0.85rem; font-family: inherit; font-weight: 700;
+        }
+
+        .btn-add {
+            background: var(--primary); color: white; border: none; padding: 8px 15px;
+            border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+
+        #cart-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #151515;
+            padding: 15px 20px; border-top: 3px solid var(--primary);
+            display: none; justify-content: space-between; align-items: center; z-index: 999;
+        }
+
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.95); overflow-y: auto;
+        }
+        .modal-content {
+            background: #1a1a1a; margin: 5% auto; padding: 20px; width: 90%; max-width: 500px;
+            border-radius: 20px; border: 1px solid var(--primary); color: white;
+        }
+        .close-modal { float: right; font-size: 30px; cursor: pointer; color: var(--primary); }
+        
+        .cart-item-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #333;
+        }
+        .remove-btn-small { color: var(--danger); font-weight: bold; cursor: pointer; padding: 5px; }
+
+        .form-group { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .form-group label { font-weight: 600; color: var(--primary); }
+        .form-group input, .form-group select, .form-group textarea {
+            background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; font-family: inherit;
+        }
+        .hidden { display: none; }
+
+        .checkout-final-btn {
+            background: #25D366; color: white; border: none; width: 100%; padding: 15px;
+            border-radius: 50px; font-weight: bold; font-size: 1.1rem; margin-top: 20px; cursor: pointer;
+        }
+
+        
+        .footer-info { text-align: center; padding: 40px 20px 120px; background: #151515; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>SMASH N' CUP</h1>
+        <p>OPEN DAILY 12PM - 12AM</p>
+        <small>MAZBOUD - MAIN ROAD</small>
+    </div>
+
+    <div class="container">
+
+        <div class="category-header"><h2>Burgers</h2></div>
+        
+       <div class="menu-card" data-name="Original Smashed">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/Mp2xCZnR/Whats-App-Image-2026-01-22-at-4-43-14-PM.jpg" 
+                 alt="Original Smashed" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Original Smashed</span>
+                <span class="item-arabic">برغر الاوريجينال</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <select class="price-select">
+                <option value="400000" data-size="Single">S: 450,000 L.L</option>
+                <option value="550000" data-size="Double">D: 600,000 L.L</option>
+                <option value="600000" data-size="Triple">T: 700,000 L.L</option>
+            </select>
+            <button class="btn-add" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Smashed Beef, cheddar slice, pickles, caramelized onions, iceberg, Smashed sauce.</span>
+</div>
+       <div class="menu-card" data-name="Spicy Smashed">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/hG9ZwgH6/488951711-122175053504329345-5213421390480708145-n.jpg" 
+                 alt="Spicy Smashed" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Spicy Smashed</span>
+                <span class="item-arabic">برغر حار</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <select class="price-select">
+                <option value="500000" data-size="Single">S: 450,000 L.L</option>
+                <option value="650000" data-size="Double">D: 600,000 L.L</option>
+                <option value="700000" data-size="Triple">T: 700,000 L.L</option>
+            </select>
+            <button class="btn-add" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Smashed beef, cheddar slice, jalapeños, caramelized onions, iceberg, spicy sauce.</span>
+</div>
+
+       <div class="menu-card" data-name="Mushroom Smashed">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/BvCqcWQF/Whats-App-Image-2026-01-22-at-5-10-32-PM.jpg" 
+                 alt="Mushroom Smashed" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Mushroom Smashed</span>
+                <span class="item-arabic">برغر صوص فطر</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <select class="price-select">
+                <option value="500000" data-size="Single">S: 550,000 L.L</option>
+                <option value="650000" data-size="Double">D: 700,000 L.L</option>
+                <option value="700000" data-size="Triple">T: 800,000 L.L</option>
+            </select>
+            <button class="btn-add" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Smashed Beef, Emmental slice, swiss cheese, iceberg, fresh mushroom, white sauce.</span>
+</div>
+      <div class="menu-card" data-name="American Burger">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/hjkcKKCW/merlin-209008674-b3fa58fa-9bb1-4cfe-a08a-40b4dda0de78-master768.webp" 
+                 alt="American Burger" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">American Burger</span>
+                <span class="item-arabic">برغر أميركية</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">500,000 L.L</span>
+            <button class="btn-add" data-price="500000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">150g Beef patty, American cheese, lettuce, pickles, tomato, onion, mustard, ketchup, mayonnaise.</span>
+</div>
+       <div class="menu-card" data-name="Zinger Burger">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/05MT9RRQ/Whats-App-Image-2026-01-22-at-4-44-51-PM.jpg" 
+                 alt="Zinger Burger" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Zinger Burger</span>
+                <span class="item-arabic">زينجر برغر</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">500,000 L.L</span>
+            <button class="btn-add" data-price="450000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Chicken zinger, iceberg, pickles, tomato, cheddar, zinger sauce.</span>
+</div>
+
+       <div class="menu-card" data-name="Honey Mustard Burger">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/mr3QYrHm/images.jpg" 
+                 alt="Honey Mustard Burger" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Honey Mustard Burger</span>
+                <span class="item-arabic">هاني ماسترد برغر</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">500,000 L.L</span>
+            <button class="btn-add" data-price="500000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Crunchy chicken, iceberg, mayonnaise, honey mustard sauce.</span>
+</div>
+
+        <div class="category-header"><h2>Sandwich Menu</h2></div>
+        
+       <div class="menu-card" data-name="Twister">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/fRs9CNfR/Whats-App-Image-2026-01-22-at-6-01-55-PM.jpg" 
+                 alt="Twister" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Twister</span>
+                <span class="item-arabic">تويستر</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">500,000 L.L</span>
+            <button class="btn-add" data-price="450000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Crispy chicken tenders, Fresh lettuce, tomato, cheddar cheese.</span>
+</div>
+
+       <div class="menu-card" data-name="Boneless">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/9X6DJhY9/Whats-App-Image-2026-01-22-at-6-13-38-PM-(1).jpg" 
+                 alt="Boneless" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Boneless</span>
+                <span class="item-arabic">بونلس</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">500,000 L.L</span>
+            <button class="btn-add" data-price="450000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Boneless chicken, lettuce, tomato, chips, sauce(mayonnaise,BBQ,Buffalo)</span>
+</div>
+
+       <div class="menu-card" data-name="Chicken Grilled BBQ">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/qRDFcQf0/Whats-App-Image-2026-01-22-at-6-13-38-PM.jpg" 
+                 alt="Chicken Grilled BBQ" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Chicken Grilled BBQ</span>
+                <span class="item-arabic">دجاج مشوي باربيكيو</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">450,000 L.L</span>
+            <button class="btn-add" data-price="550000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Grilled chicken,mozzarella, pickles, iceberg, BBQ sauce.</span>
+</div>
+
+       <div class="menu-card" data-name="Hunger Zinger">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/QNytVryJ/Whats-App-Image-2026-01-22-at-6-30-30-PM.jpg" 
+                 alt="Hunger Zinger" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Hunger Zinger</span>
+                <span class="item-arabic">هنجر زينجر</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">650,000 L.L</span>
+            <button class="btn-add" data-price="600000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Wrap,Crunchy chicken, iceberg, pickles, Mozzarella patty, tomato, cheddar sauce, zinger sauce.</span>
+</div>
+
+        <div class="category-header"><h2>Pasta</h2></div>
+        
+      <div class="menu-card" data-name="Chicken Alfredo">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/15ZMNbTH/Whats-App-Image-2026-01-22-at-5-43-05-PM.jpg" 
+                 alt="Chicken Alfredo" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Chicken Alfredo</span>
+                <span class="item-arabic">تشيكن ألفريدو</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">700,000 L.L</span>
+            <button class="btn-add" data-price="650000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Grilled chicken, Creamy Alfredo sauce, Mushrooms, Butter, Parmesan cheese</span>
+</div>
+<div class="menu-card" data-name=" Penne Arrabbiata ">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/d0J9SdvG/Whats-App-Image-2026-01-22-at-5-39-14-PM.jpg" 
+                 alt="Arrabbiata Pasta" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Arrabbiata Pasta</span>
+                <span class="item-arabic">باستا أرابياتا</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">700,000 L.L</span>
+            <button class="btn-add" data-price="450000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Penne pasta, spicy tomato sauce, garlic, oliveoil, fresh herbs.</span>
+</div>
+<div class="menu-card" data-name="Pesto Pasta">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/598S1n0z/Whats-App-Image-2026-01-22-at-5-42-47-PM.jpg" 
+                 alt="Pesto Pasta" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Pesto Pasta</span>
+                <span class="item-arabic">بيستو باستا</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">700,000 L.L</span>
+            <button class="btn-add" data-price="650000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Penne pasta, Fresh creamy Pesto sauce</span>
+</div>
+
+     <div class="menu-card" data-name="Mac And Cheese">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/CKHnX6JF/Whats-App-Image-2026-01-22-at-4-44-51-PM-(1).jpg" 
+                 alt="Mac And Cheese" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Mac And Cheese</span>
+                <span class="item-arabic">ماك أند تشيز</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">700,000 L.L</span>
+            <button class="btn-add" data-price="650000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Elbow pasta, Cheddar cheese, Mozzarella, Parmesan cheese</span>
+</div>
+
+        <div class="category-header"><h2>Boxes</h2></div>
+
+       <div class="menu-card" data-name="Smash N' Cup Box">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/Ghgp8ngg/Whats-App-Image-2026-01-22-at-6-15-20-PM.jpg" 
+                 alt="Smash N' Cup Box" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Smash N' Cup Box</span>
+                <span class="item-arabic">سماش أند كوب بوكس</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">1,000,000 L.L</span>
+            <button class="btn-add" data-price="750000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">1 Burger, pasta, fries, our signature mix.</span>
+</div>
+
+   <div class="menu-card" data-name="Crispy Box">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/GpZggt7c/Whats-App-Image-2026-01-22-at-4-44-50-PM.jpg" 
+                 alt="Crispy Box" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Crispy Box</span>
+                <span class="item-arabic">كريسبي بوكس</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">650,000 L.L</span>
+            <button class="btn-add" data-price="600000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">5 Pcs Crispy, Fries, coleslaw, garlic, pickles.</span>
+</div>
+    <div class="menu-card" data-name="Wings Box">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/bv8jC6sR/Whats-App-Image-2026-01-22-at-5-50-39-PM.jpg" 
+                 alt="Wings Box" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Wings Box</span>
+                <span class="item-arabic">وينجز بوكس</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">550,000 L.L</span>
+            <button class="btn-add" data-price="600000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">12 pcs of wings Dipped, Fries, dip.</span>
+</div>
+
+       <div class="menu-card" data-name="Loaded Chicken">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/cCW1Qsf3/Whats-App-Image-2026-01-22-at-5-10-32-PM-(1).jpg" 
+                 alt="Loaded Chicken" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Loaded Chicken</span>
+                <span class="item-arabic">دجاج كرانشي وبطاطا</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">600,000 L.L</span>
+            <button class="btn-add" data-price="500000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Fries, crispy strips on top, sauce</span>
+</div>
+
+     <div class="menu-card" data-name="Loaded Smashed">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/0yhsYksJ/Whats-App-Image-2026-01-22-at-5-10-32-PM-(2).jpg" 
+                 alt="Loaded Smashed" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Loaded Smashed</span>
+                <span class="item-arabic">لحمة سماش وبطاطا</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">650,000 L.L</span>
+            <button class="btn-add" data-price="600000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Fries, Smashed beef on top, sauce</span>
+</div>
+
+        <div class="menu-card" data-name="Kids Meal">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/qB3Y6PJ1/images-(3).jpg" 
+                 alt="Kids Meal" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Kids Meal</span>
+                <span class="item-arabic">وجبة أطفال</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">500,000 L.L</span>
+            <button class="btn-add" data-price="500000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">5 pcs nuggets, 1 pc crispy, fries, dips.</span>
+</div>
+
+        
+
+        <div class="category-header"><h2>Appetizers</h2></div>
+
+       <div class="menu-card" data-name="Smashitizer Combo">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/FR4gJLCT/Whats-App-Image-2026-01-22-at-4-44-51-PM-(2).jpg" 
+                 alt="Smashitizer Combo" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Smashitizer Combo</span>
+                <span class="item-arabic">سماشيتيزر كومبو</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">1000,000 L.L</span>
+            <button class="btn-add" data-price="900000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">3 mozzarella sticks, 3 cheese balls, 3 jalapeños Bites, 3 onion rings, 6 wings, fries.</span>
+</div>
+
+        <div class="menu-card" data-name="Mozzarella Sticks">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/CLbNwYhH/Whats-App-Image-2026-01-22-at-6-45-33-PM.jpg" 
+                 alt="Mozzarella Sticks" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Mozzarella Sticks</span>
+                <span class="item-arabic">أصابع الموزاريلا</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">400,000 L.L</span>
+            <button class="btn-add" data-price="400000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">6 pcs mozzarella sticks.</span>
+</div>
+
+      <div class="menu-card" data-name="Wedges">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/T1qDMNTn/Baked-Potato-Wedges-with-Rosemary-The-Little-Shop-of-Olive-Oils.webp" 
+                 alt="Wedges" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Wedges</span>
+                <span class="item-arabic">ودجز</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">350,000 L.L</span>
+            <button class="btn-add" data-price="250000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Crispy seasoned potato wedges.</span>
+</div>
+
+     <div class="menu-card" data-name="Fries">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/0Nwr1Xf0/images-(1).jpg" 
+                 alt="Fries" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Fries</span>
+                <span class="item-arabic">بطاطا مقلية</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">200,000 L.L</span>
+            <button class="btn-add" data-price="200000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+    <span class="item-desc" style="margin-top: 10px; display: block;">Crispy golden french fries.</span>
+</div>
+
+        <div class="category-header"><h2>Drinks & Dips</h2></div>
+        
+<div class="menu-card" data-name="Drinks" style="background: #1a1a1a; padding: 15px; border-radius: 15px; margin-bottom: 12px; font-family: sans-serif; color: white; border: 1px solid #333;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+        
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <img src="https://i.postimg.cc/R0Wmk3M5/360-F-401960003-Nc-Dylwh-LFm3Maz-FFFh7g4Wn-Nl-ONhx8NB.jpg" 
+                 alt="Drinks" 
+                 style="width: 75px; height: 75px; object-fit: cover; border-radius: 10px; border: 1px solid #ff6600;">
+            <div>
+                <div style="color: #ff6600; font-weight: bold; font-size: 0.9rem; line-height: 1.2;">Soft Drinks /<br>Ice Tea /<br>Sparkling</div>
+                <div style="color: #ccc; font-size: 0.85rem; margin-top: 5px;">مشروبات غازية</div>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; min-width: 140px;">
+            
+            <div style="background: rgba(255,255,255,0.05); border: 1px solid #444; border-radius: 8px; padding: 5px 10px; width: 100%; text-align: center;">
+                <select class="price-select" style="background: transparent; color: #ffa500; border: none; font-size: 0.85rem; font-weight: bold; width: 100%; cursor: pointer; outline: none; text-align: center;">
+                    <option value="90000">Pepsi</option>
+                    <option value="90000">7up</option>
+                    <option value="90000">Mirinda</option>
+                    <option value="90000">Pepsi Diet</option>
+                    <option value="90000">7up Diet</option>
+                    <option value="90000">Peach Ice Tea</option>
+                    <option value="90000">Lemon Ice Tea</option>
+                    <option value="90000">Rim Sparkling</option>
+                </select>
+                <div style="color: #ffa500; font-size: 0.85rem; font-weight: bold; border-top: 1px solid #444; margin-top: 4px; pt-4px; padding-top: 4px;">
+                    90,000 L.L
+                </div>
+            </div>
+
+            <button class="btn-add" onclick="addToCart(this)" 
+                    style="background: #ff6600; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 80px; font-size: 0.8rem;">
+                ADD +
+            </button>
+            
+        </div>
+    </div>
+</div>
+
+<div class="menu-card" data-name="Water">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/GpC6bqnL/Rim-0-5L-PET-Still-Water-600x600.jpg" 
+                 alt="Water" 
+                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary);">
+            <div>
+                <span class="item-title">Water</span>
+                <span class="item-arabic">مياه معدنية</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">30,000 L.L</span>
+            <button class="btn-add" data-price="30000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+</div>
+<div class="menu-card" data-name="Extra Dip" style="background: #1a1a1a; padding: 15px; border-radius: 15px; margin-bottom: 12px; font-family: sans-serif; color: white; border: 1px solid #333;">
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+        
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <img src="https://i.postimg.cc/2yD1wsPX/Guide-to-Culinary-Nutrition-Dips-and-Sauces.jpg" 
+                 alt="Extra Dips" 
+                 style="width: 75px; height: 75px; object-fit: cover; border-radius: 10px; border: 1px solid #ff6600;">
+            <div>
+                <div style="color: #ff6600; font-weight: bold; font-size: 1rem; line-height: 1.2;">Extra Dips</div>
+                <div style="color: #ccc; font-size: 0.9rem; margin-top: 4px;">إضافة صوص</div>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; min-width: 150px;">
+            <div style="background: rgba(255,255,255,0.05); border: 1px solid #444; border-radius: 8px; padding: 6px 8px; width: 100%; text-align: center; position: relative;">
+                <select class="price-select" style="background: transparent; color: #ffa500; border: none; font-size: 0.85rem; font-weight: bold; width: 100%; cursor: pointer; outline: none; text-align: center; appearance: none; -webkit-appearance: none; padding-right: 20px; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23ffa500%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C/polyline%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 0px center; background-size: 14px;">
+                    <option value="50000">Cheddar</option>
+                    <option value="50000">Cocktail</option>
+                    <option value="50000">Honey Mustard</option>
+                    <option value="50000">Ranch</option>
+                    <option value="50000">BBQ</option>
+                    <option value="50000">Buffalo</option>
+                    <option value="50000">Smashed Sauce</option>
+                </select>
+                <div style="color: #ffa500; font-size: 0.85rem; font-weight: bold; border-top: 1px solid #444; margin-top: 5px; padding-top: 5px;">
+                    50,000 L.L
+                </div>
+            </div>
+
+            <button class="btn-add" onclick="addToCart(this)" 
+                    style="background: #ff6600; color: white; border: none; padding: 8px 0; border-radius: 8px; font-weight: bold; cursor: pointer; width: 90px; font-size: 0.8rem; text-align: center;">
+                ADD +
+            </button>
+        </div>
+    </div>
+</div>
+       <div class="menu-card" data-name="Mozzarella Patty" style="border-style: dashed;">
+    <div class="item-top">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <img src="https://i.postimg.cc/vHmYs8LK/images-(2).jpg" 
+                 alt="Mozzarella Patty" 
+                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px dashed var(--primary);">
+            <div>
+                <span class="item-title" style="font-size: 0.95rem;">Mozzarella Patty</span>
+                <span class="item-arabic" style="font-size: 0.8rem;">قرص موزاريلا</span>
+            </div>
+        </div>
+        <div class="action-area">
+            <span class="price-box">200,000 L.L</span>
+            <button class="btn-add" data-price="180000" onclick="addToCart(this)">ADD +</button>
+        </div>
+    </div>
+</div>
+
+    <div class="footer-info">
+        <h3>SMASH N' CUP</h3>
+        <p>Location: Mazboud / Main Road</p>
+        <p>Delivery: 78 954828</p>
+    </div>
+
+    <div id="cart-bar">
+        <div class="cart-info">
+            <span id="cart-count">0</span> Items<br>
+            Total: <span id="cart-total">0</span> L.L
+        </div>
+        <button class="btn-add" style="padding: 12px 25px; border-radius: 50px;" onclick="openCart()">VIEW CART</button>
+    </div>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCart()">×</span>
+            <h2 style="color: var(--primary); margin-top: 0;">Review Order</h2>
+            <div id="modal-items-list"></div>
+            <div class="form-group">
+                <label>Dining Option:</label>
+                <select id="order-type" onchange="toggleLocationFields()">
+                    <option value="Dine-in">Dine-in</option>
+                    <option value="Takeaway">Takeaway (Pickup)</option>
+                    <option value="Delivery">Delivery</option>
+                </select>
+            </div>
+            <div id="delivery-fields" class="hidden">
+                <div class="form-group"><label>Full Name:</label><input type="text" id="cust-name"></div>
+                <div class="form-group"><label>Address:</label><textarea id="cust-address"></textarea></div>
+            </div>
+            <div class="form-group">
+                <label>Special Instructions (e.g. Add Patty to Burger):</label>
+                <textarea id="order-note" placeholder="Write any extra details here..."></textarea>
+            </div>
+            <button class="checkout-final-btn" onclick="requestOrder()">SEND TO WHATSAPP</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function addToCart(btn) {
+            const card = btn.closest('.menu-card');
+            const itemName = card.getAttribute('data-name');
+            let price = 0;
+            let choiceText = "";
+
+            const selector = card.querySelector('.price-select');
+            if (selector) {
+                price = parseInt(selector.value);
+                choiceText = " (" + selector.options[selector.selectedIndex].getAttribute('data-size') + ")";
+            } else {
+                price = parseInt(btn.getAttribute('data-price'));
+            }
+
+            cart.push({ name: itemName + choiceText, price: price });
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartBar = document.getElementById('cart-bar');
+            document.getElementById('cart-count').innerText = cart.length;
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cart-total').innerText = total.toLocaleString();
+            cartBar.style.display = cart.length > 0 ? 'flex' : 'none';
+        }
+
+        function openCart() {
+            const list = document.getElementById('modal-items-list');
+            list.innerHTML = '';
+            cart.forEach((item, index) => {
+                list.innerHTML += `
+                    <div class="cart-item-row">
+                        <span>${item.name}</span>
+                        <span>${item.price.toLocaleString()} L.L <span class="remove-btn-small" onclick="removeItem(${index})">✕</span></span>
+                    </div>`;
+            });
+            document.getElementById('cartModal').style.display = 'block';
+        }
+
+        function closeCart() { document.getElementById('cartModal').style.display = 'none'; }
+        function removeItem(index) { cart.splice(index, 1); if (cart.length === 0) closeCart(); openCart(); updateCartUI(); }
+        
+        function toggleLocationFields() {
+            const type = document.getElementById('order-type').value;
+            document.getElementById('delivery-fields').className = (type === 'Delivery') ? '' : 'hidden';
+        }
+
+        function requestOrder() {
+            const type = document.getElementById('order-type').value;
+            if (type === 'Delivery') {
+                if (!document.getElementById('cust-name').value || !document.getElementById('cust-address').value) {
+                    alert("Name and Address are required!"); return;
+                }
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => sendFinalMessage(type, pos.coords.latitude, pos.coords.longitude),
+                        () => sendFinalMessage(type, null, null)
+                    );
+                } else { sendFinalMessage(type, null, null); }
+            } else { sendFinalMessage(type, null, null); }
+        }
+
+        function sendFinalMessage(type, lat, lon) {
+            const phoneNumber = "96178954828";
+            const note = document.getElementById('order-note').value;
+            let message = `🍔 *New Order (${type})* \n\n`;
+            cart.forEach((item, index) => { message += `${index + 1}. ${item.name} - ${item.price.toLocaleString()} L.L\n`; });
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            message += `\n💰 *TOTAL: ${total.toLocaleString()} L.L*`;
+            if (note.trim()) message += `\n\n📝 *Notes/Instructions:* ${note}`;
+            if (type === 'Delivery') {
+                message += `\n👤 *Customer:* ${document.getElementById('cust-name').value}`;
+                message += `\n🏠 *Address:* ${document.getElementById('cust-address').value}`;
+                if (lat && lon) message += `\n📍 *Location:* https://www.google.com/maps?q=${lat},${lon}`;
+            }
+            window.location.href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        }
+    </script>
+</body>
+</html>
